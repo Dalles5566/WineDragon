@@ -38,8 +38,12 @@
     </style>
 
 </head>
+
+<!--  angular 1.6.9    set up your app(web) called myApp. you must do this step-->
 <body ng-app="myApp" class="ng-cloak">
 
+
+<!--  samething boostrap stuffs-->
 <%--boostrap--%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -53,7 +57,7 @@
     <div class="rounded">
         <a href="/">Home</a>
         <a href="/winelist">Wine List</a>
-        <a href="/winecrud">Update</a>
+        <a href="/login">Update</a>
     </div>
 </div>
 

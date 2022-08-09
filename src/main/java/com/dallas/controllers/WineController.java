@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
-@RequestMapping("/wines/")
+@RequestMapping("/wines")
 public class WineController {
 
     //  8/1/22 D-Note: get connection with WineService

@@ -22,5 +22,8 @@ public class WineEntity {
     public Boolean visibility;
 
     public Boolean deleted;
+    
+    
+    
 
 }

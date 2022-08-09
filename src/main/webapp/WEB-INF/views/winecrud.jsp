@@ -70,7 +70,7 @@
 <div class="menu">
     <a href="/">Home</a>
     <a href="/winelist">Wine List</a>
-    <a href="/winecrud">Update</a>
+    Welcome, ${username}!
 </div>
 
 <div class="container" style="width:100%" ng-controller="WineController as ctrl">

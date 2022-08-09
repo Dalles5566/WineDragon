@@ -1,7 +1,7 @@
 'use strict';
 angular.module('myApp').factory('WineService', ['$http', '$q', function ($http, $q) {
 
-    const REST_SERVICE_URI = "http://localhost:8080/wines/"
+    const REST_SERVICE_URI = "/wines/"
 
     var factory = {
         fetchAllWines: fetchAllWines,
