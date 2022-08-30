@@ -1,69 +1,77 @@
 package com.dallas.service.impl;
 
+import com.dallas.dao.WineDAO;
 import com.dallas.exceptions.BizException;
 import com.dallas.service.WineService;
 import com.dallas.vo.Entity.WineEntity;
 import com.dallas.vo.Wine;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import javax.transaction.Transactional;
+
 @Service
 public class WineServiceImpl implements WineService {
 
-    private static HashMap<String, WineEntity> theWineList;
-
-    static{
-            theWineList = new HashMap<>();
-            String wineOneUUID = UUID.randomUUID().toString();
-            theWineList.put(wineOneUUID, new WineEntity(wineOneUUID, "wineOne", "First Wine", "USA", 100, true, false));
-            String wineTwoUUID = UUID.randomUUID().toString();
-            theWineList.put(wineTwoUUID, new WineEntity(wineTwoUUID, "wineTwo", "", "USA", 100, true, false));
-            String wineThreeUUID = UUID.randomUUID().toString();
-            theWineList.put(wineThreeUUID, new WineEntity(wineThreeUUID, "wineThree", "", "USA", 100, true, false));
-            String wineFourUUID = UUID.randomUUID().toString();
-            theWineList.put(wineFourUUID, new WineEntity(wineFourUUID, "wineFour", "Forth Wine", "USA", 100, true, false));
-    }
+    @Autowired
+    private WineDAO wineDAO;
 
     @Override
+	@Transactional
     public List<Wine> getWineList() {
-        List<Wine> wineList = new ArrayList<>();
-        for (String key : theWineList.keySet()) {
-            wineList.add(convertToVO(theWineList.get(key)));
+        List<WineEntity> WineEntityList = wineDAO.selectWineList();
+        List<Wine> wineList = new ArrayList();
+        for (WineEntity wineEntity : WineEntityList) {
+            wineList.add(this.convertToVO(wineEntity));
         }
-
+        //  this might not work
+//        List<Wine> collect = WineEntityList.stream().map(this::convertToVO).collect(Collectors.toList());
         return wineList;
     }
 
     @Override
-    public Wine addWine(Wine wine) {
-        WineEntity wineEntity = this.convertToEntity(wine);
-        wineEntity.setId(UUID.randomUUID().toString());
-        theWineList.put(wineEntity.getId(), wineEntity);
-        return convertToVO(wineEntity);
-    }
-
-    @Override
-    public Wine updateWine(Wine wine) {
-        WineEntity wineEntity = this.convertToEntity(wine);
-        WineEntity wineSaved = theWineList.get(wineEntity.getId());
-        if (wineSaved == null){
-             throw new BizException("Can't fine wine");
+	@Transactional
+    public Wine getWineById(String id) {
+        WineEntity wineSaved = wineDAO.selectWineById(id);
+        if (wineSaved == null) {
+            throw new BizException("Can't fine wine");
         }
-        theWineList.put(wineEntity.getId(), wineEntity);
-        return convertToVO(wineEntity);
+        return convertToVO(wineSaved);
     }
 
     @Override
-    public Boolean removeWineById(String id) {
-        //  In task 2, I will change the "deleted" properties from false to true instead of remove the object from database.
-        theWineList.remove(id);
-        return true;
+	@Transactional
+    public void addWine(Wine wine) {
+        WineEntity wineEntity = this.convertToEntity(wine);
+        String wineId = UUID.randomUUID().toString();
+        wineEntity.setId(wineId);
+        wineDAO.addWine(wineEntity);
     }
 
+    @Override
+	@Transactional
+    public void updateWine(Wine wine) {
+        WineEntity wineEntity = this.convertToEntity(wine);
+        WineEntity wineSaved = wineDAO.selectWineById(wine.getId());
+        if (wineSaved == null) {
+            throw new BizException("Can't fine wine");
+        }
+    	System.out.println("found wine");
+    	System.out.println(wineEntity);
+    	System.out.println(wineSaved);
+        wineDAO.updateWine(wineEntity);
+    }
 
-    //----
+    @Override
+	@Transactional
+    public void removeWineById(String id) {
+        wineDAO.removeWineById(id);
+    }
+
+    // ----------------
     private Wine convertToVO(WineEntity wineEntity) {
         if (wineEntity == null) {
             throw new BizException("Wine is not found");
@@ -81,4 +89,5 @@ public class WineServiceImpl implements WineService {
         BeanUtils.copyProperties(wine, wineEntity);
         return wineEntity;
     }
+
 }

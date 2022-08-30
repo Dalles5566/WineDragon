@@ -28,11 +28,11 @@ public class WineController {
         //  8/1/22 D-Note: use getWineList() and retreat a list
         List<Wine> wineList = wineService.getWineList();
         //  if the list is Empty and  equalToNull, tell front end that NO_CONTENT
-        if(wineList.isEmpty()&& wineList == null){
+        if (wineList.isEmpty() && wineList == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         //  if the list has something(means it found objects from database, it will set the wineList, and an OK_Status to the frontend.
-        return new ResponseEntity<>(wineList,HttpStatus.OK);
+        return new ResponseEntity<>(wineList, HttpStatus.OK);
     }
 
     //  Frontend called http://localhost:8080/WineDragon_war/ with a "POST" request will "trigger" this
@@ -42,29 +42,23 @@ public class WineController {
         if (wine == null) {
             throw new BizException("Wine object can't be null");
         }
-        Wine isSaved = wineService.addWine(wine);
-        if (isSaved == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(isSaved, HttpStatus.OK);
+        wineService.addWine(wine);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //  Frontend called http://localhost:8080/WineDragon_war/wine/ with a "PUT" request will "trigger" this
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Wine> updateWine(@RequestBody Wine wine){
-        if (wine == null){
+    public ResponseEntity<Wine> updateWine(@RequestBody Wine wine) {
+        if (wine == null) {
             throw new BizException("Wine object can't be null");
         }
-        Wine isUpdated = wineService.updateWine(wine);
-        if (isUpdated == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(isUpdated, HttpStatus.OK);
+        wineService.updateWine(wine);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //  Frontend called http://localhost:8080/WineDragon_war/wine/{id} with a "Delete" request will "trigger" this
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Wine> deleteWine(@PathVariable("id") String wineId){
+    public ResponseEntity<Wine> deleteWine(@PathVariable("id") String wineId) {
         wineService.removeWineById(wineId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
