@@ -1,5 +1,6 @@
 package com.dallas.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -8,12 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dallas.dao.UserDAO;
 import com.dallas.vo.User;
 import com.dallas.vo.Entity.WineEntity;
 
 @Controller
 public class FrontPageController {
 
+	@Autowired
+	private UserDAO userDAO;
+	
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getIndexPage() {
 		return "index";
@@ -38,8 +44,11 @@ public class FrontPageController {
 		if (user == null) {
 			return "winelist";
 		}
-		
-		if (user.getUsername().equals("dallas") && user.getPassword().equals("asdasd")) {
+		String correctPassword = userDAO.getPasswordByUserName(user.getUsername());
+		if (correctPassword == null) {
+			return "winelist";
+		}
+		if (user.getUsername().equals("dallas") && user.getPassword().equals(correctPassword)) {
 			model.addAttribute("username", user.getUsername());
 			return "winecrud";
 		} else {

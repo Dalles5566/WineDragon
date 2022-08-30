@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface WineService {
     List<Wine> getWineList();
+    
+    Wine getWineById(String id);
 
-    Wine addWine(Wine wine);
+    void addWine(Wine wine);
 
-    Wine updateWine(Wine wine);
+    void updateWine(Wine wine);
 
-    Boolean removeWineById(String id);
+    void removeWineById(String id);
 }
